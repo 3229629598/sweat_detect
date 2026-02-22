@@ -1,0 +1,44 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/my/my",
+    "pages/crop/crop",
+    "pages/result/result"
+  ],
+  "window": {
+    "navigationBarTitleText": "Sweat Detection",
+    "navigationBarBackgroundColor": "#00BFFF",
+    "enablePullDownRefresh": false,
+    "backgroundColor": "#00FFFF",
+    "backgroundTextStyle": "light",
+    "navigationBarTextStyle": "black"
+  },
+  "usingComponents": {
+    "van-cell": "@vant/weapp/cell/index",
+    "van-cell-group": "@vant/weapp/cell-group/index",
+    "van-calendar": "@vant/weapp/calendar/index",
+    "van-notice-bar": "@vant/weapp/notice-bar/index"
+  },
+
+  "tabBar": {
+    "selectedColor": "#1c1c1b",
+    "position": "bottom",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "images/icon/home.png",
+        "selectedIconPath": "images/icon/home-o.png"
+      },
+      {
+        "pagePath": "pages/my/my",
+        "text": "我的",
+        "iconPath": "images/icon/my.png",
+        "selectedIconPath": "images/icon/my-o.png"
+      }
+    ]
+  },
+
+  "sitemapLocation": "sitemap.json"
+
+}

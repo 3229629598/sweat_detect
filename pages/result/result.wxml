@@ -1,0 +1,102 @@
+<!--pages/result/result.wxml-->
+<!-- 页面结构 -->
+<view class="container">
+  <!-- 顶部窄条 -->
+  <view class="top-bar">
+    <text>Mg</text>
+    <text class="superscript">2+</text>
+  </view>
+  <!-- 中间图片区 -->
+  <view class="middle-section">
+    <!-- 左侧两个矩形 -->
+    <view class="side-column left">
+      <view class="rect">PH</view>
+      <view class="rect">葡萄糖</view>
+    </view>
+    <!-- 中间正方形图片区 -->
+    <view class="center-square">
+      <image src="{{src}}" mode="aspectFill" class="center-image" />
+    </view>
+    <!-- 右侧两个矩形 -->
+    <view class="side-column right">
+      <view class="rect">乳酸</view>
+      <view class="rect">
+        <text>Cl</text>
+        <text class="superscript">-</text>
+      </view>
+    </view>
+  </view>
+  <!-- 下方大矩形 -->
+  <view class="bottom-section">
+    <view>
+      <text>Mg</text>
+      <text class="superscript">2+</text>
+      <text> : {{rx_data[0][3]}} </text>
+      <text>mM</text>
+    </view>
+    <view>
+      <text>PH</text>
+      <text> : {{rx_data[1][3]}} </text>
+      <text>mM</text>
+    </view>
+    <view>
+      <text>葡萄糖</text>
+      <text> : {{rx_data[2][3]}} </text>
+      <text>mM</text>
+    </view>
+    <view>
+      <text>乳酸</text>
+      <text> : {{rx_data[3][3]}} </text>
+      <text>mM</text>
+    </view>
+    <view>
+      <text>Cl</text>
+      <text class="superscript">-</text>
+      <text> : {{rx_data[4][3]}} </text>
+      <text>mM</text>
+    </view>
+  </view>
+  <view class="data-section">
+    <view>
+    <text>Mg</text>
+      <text class="superscript">2+</text>
+      <text> :</text>
+      <text style="color: red;"> R {{rx_data[0][0]}}</text>
+      <text style="color: green;"> G {{rx_data[0][1]}}</text>
+      <text style="color: blue;"> B {{rx_data[0][2]}}</text>
+    </view>
+    <view>
+    <text>PH</text>
+      <text> :</text>
+      <text style="color: red;"> R {{rx_data[1][0]}}</text>
+      <text style="color: green;"> G {{rx_data[1][1]}}</text>
+      <text style="color: blue;"> B {{rx_data[1][2]}}</text>
+    </view>
+    <view>
+    <text>葡萄糖</text>
+      <text> :</text>
+      <text style="color: red;"> R {{rx_data[2][0]}}</text>
+      <text style="color: green;"> G {{rx_data[2][1]}}</text>
+      <text style="color: blue;"> B {{rx_data[2][2]}}</text>
+    </view>
+    <view>
+    <text>乳酸</text>
+      <text> :</text>
+      <text style="color: red;"> R {{rx_data[3][0]}}</text>
+      <text style="color: green;"> G {{rx_data[3][1]}}</text>
+      <text style="color: blue;"> B {{rx_data[3][2]}}</text>
+    </view>
+    <view>
+    <text>Cl</text>
+      <text class="superscript">-</text>
+      <text> :</text>
+      <text style="color: red;"> R {{rx_data[4][0]}}</text>
+      <text style="color: green;"> G {{rx_data[4][1]}}</text>
+      <text style="color: blue;"> B {{rx_data[4][2]}}</text>
+    </view>
+  </view>
+  <!-- 底部按钮 -->
+  <view class="btn-group">
+    <button bindtap="handleBtnClick">返回首页</button>
+  </view>
+</view>

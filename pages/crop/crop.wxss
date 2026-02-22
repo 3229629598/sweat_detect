@@ -1,0 +1,37 @@
+/* 容器占满屏幕 */
+.cropper-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.tip-text {
+  text-align: center;
+  color: red;
+  font-size: 40rpx;
+  font-weight: bold;
+  margin: 100rpx 0;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* 按钮组（底部居中） */
+.btn-group {
+  position: absolute;
+  bottom: 200rpx;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.btn-group button {
+  width: 300rpx;
+  background: #07c160;
+  color: white;
+  border: none;
+  border-radius: 8rpx;
+}

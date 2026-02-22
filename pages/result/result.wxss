@@ -1,0 +1,113 @@
+/* pages/result/result.wxss */
+/* 全局样式 */
+.container {
+  width: 100%;
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 右上角小标 */
+.superscript {
+  font-size: 25rpx; /* 字号缩小，比主文字小 */
+  vertical-align: super; /* 垂直对齐到上标位置 */
+  line-height: 1; /* 避免行高影响位置 */
+}
+
+/* 顶部窄条 */
+.top-bar {
+  height: 50rpx;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  color: black;
+}
+
+/* 中间图片区 */
+.middle-section {
+  width: 100vw;
+  height: 500rpx;
+  display: flex;
+  align-items: space-between;
+  justify-content: space-between;
+  background-color: white;
+}
+
+/* 左右列容器 */
+.side-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 0rpx; /* 两个矩形之间的间距 */
+}
+
+/* 左右矩形 */
+.rect {
+  width: 150rpx;
+  height: 200rpx;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  color: black;
+}
+
+/* 中间正方形 */
+.center-square {
+  width: 500rpx;
+  height: 500rpx;
+  background-color: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.center-image {
+  width: 100%;
+  height: 100%;
+}
+
+/* 下方大矩形 */
+.bottom-section {
+  width: 70vw;
+  height: 400rpx;
+  background-color:lightcyan;
+  /* border: 2rpx solid black; */
+  border-radius: 30rpx;
+  margin: 10rpx;
+  font-size: 50rpx;
+  padding-left: 50rpx;
+  line-height:160%;
+}
+
+.data-section {
+  flex: 1; /* 占满下方空间 */
+  width: 70vw;
+  background-color:antiquewhite;
+  /* border: 2rpx solid black; */
+  border-radius: 30rpx;
+  margin: 10rpx;
+  font-size: 40rpx;
+  padding-left: 50rpx;
+  line-height:160%;
+}
+
+/* 按钮组（底部居中） */
+.btn-group {
+  position: fixed;
+  left: 0;
+  width: 100%;
+  bottom: 50rpx;
+}
+
+.btn-group button {
+  width: 300rpx;
+  background: #07c160;
+  color: white;
+  border: none;
+  border-radius: 8rpx;
+}
