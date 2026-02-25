@@ -30,9 +30,9 @@ Page({
     const fs = wx.getFileSystemManager(); 
     fs.readFile({
       filePath: filePath,
-      encoding: 'binary', // 以二进制读取
       success: (fileRes) => {
-        const imageMd5 = md5(fileRes.data);
+        const uint8Array = new Uint8Array(fileRes.data);
+        const imageMd5 = md5(uint8Array);
         console.log('小程序端计算的MD5:', imageMd5);
         this.setData({
           imageMd5: imageMd5,
