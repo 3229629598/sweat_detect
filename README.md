@@ -1,6 +1,6 @@
 # 创建django项目
 ```
-C:\Users\3229629598\AppData\Local\Programs\Python\Python312\Scripts\django-admin startproject wx_backend
+C:\Users\3229629598\miniconda3\envs\wx_backend\Scripts\django-admin startproject wx_backend
 ```
 # 第一次启动
 settings.py的INSTALLED_APPS中添加‘rest_framework’，命令行输入
@@ -21,7 +21,8 @@ python manage.py migrate
 ```
 python manage.py createsuperuser
 ```
-# 导出第三方模块
+# 导出第三方模块到requirements.txt
 ```
-pip freeze > requirements.txt
+pip install pipreqs
+pipreqs --force .
 ```
