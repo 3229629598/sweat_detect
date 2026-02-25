@@ -1,4 +1,5 @@
 import os
+import hashlib
 import numpy as np
 from django.conf import settings
 
@@ -51,13 +52,34 @@ def welcome(request):
 @api_view(['POST'])
 def sweat_detect(request):
     try:
-        # 1. 接收上传的图片
+        # 1. 接收上传的图片和MD5值
         if 'file' not in request.FILES:
             return Response({'code': 400, 'msg': '未上传图片'}, status=400)
         
         uploaded_file = request.FILES['file']
+        wx_md5 = request.POST.get('image_md5', '')  # 小程序端计算的MD5
+        print(f"小程序MD5: {wx_md5}")
+
+        # 2. 计算后端接收的文件MD5并对比哈希值
+        file_hash = hashlib.md5()
+        for chunk in uploaded_file.chunks():
+            file_hash.update(chunk)
+        backend_md5 = file_hash.hexdigest()
+        print(f"后端计算的MD5: {backend_md5}")
+
+        if wx_md5 and wx_md5 != backend_md5:
+            print(f"⚠️ 哈希值不一致！小程序: {wx_md5} | 后端: {backend_md5}")
+            return Response({
+                'code': 400,
+                'msg': '图片传输过程中被修改（哈希值不一致）',
+                'data': {
+                    'wx_md5': wx_md5,
+                    'backend_md5': backend_md5
+                }
+            }, status=400)        
+        uploaded_file.seek(0)  # 重置文件指针，准备保存
         
-        # 2. 保存到临时目录
+        # 3. 保存到临时目录
         temp_dir = os.path.join(settings.MEDIA_ROOT, 'temp')
         os.makedirs(temp_dir, exist_ok=True)
         temp_file_path = os.path.join(temp_dir, uploaded_file.name)
@@ -66,7 +88,7 @@ def sweat_detect(request):
             for chunk in uploaded_file.chunks():
                 destination.write(chunk)
         
-        # 3. 定义颜色范围（和你vision.py里的一致）
+        # 4. 定义颜色范围（和你vision.py里的一致）
         color_ranges = [
             {'name': 'purple', 'lower': np.array([100, 50, 50]), 'upper': np.array([150, 255, 255])},
             {'name': 'dark_brown', 'lower': np.array([0, 50, 50]), 'upper': np.array([20, 255, 200])},
@@ -75,13 +97,17 @@ def sweat_detect(request):
             {'name': 'light_yellow', 'lower': np.array([20, 50, 150]), 'upper': np.array([35, 255, 255])},
         ]
         
-        # 4. 调用Vision类进行检测
+        # 5. 调用Vision类进行检测
         detector = Vision(distance_threshold=15, min_contour_area=50)
         position_blocks = detector.detect(
             image_path=temp_file_path,
             color_ranges=color_ranges,
             show_result=False  # 后端运行时不显示图像窗口
         )
+
+        if os.path.exists(temp_file_path):
+            os.remove(temp_file_path)
+            print(f"临时文件已删除：{temp_file_path}")
 
         count = len(detector.color_blocks)
         if count>5:
@@ -92,7 +118,7 @@ def sweat_detect(request):
             'data': None
         }, status=400)
         
-        # 5. 处理结果：将np.uint8转为Python原生类型，方便JSON序列化
+        # 6. 处理结果：将np.uint8转为Python原生类型，方便JSON序列化
         def serialize_block(block):
             if block is None:
                 return None
@@ -117,7 +143,7 @@ def sweat_detect(request):
                 # 格式：[R, G, B, 0]
                 output_array.append([r, g, b, 0])
         
-        # 6. 返回JSON结果
+        # 7. 返回JSON结果
         return Response({
             'code': 200,
             'msg': '检测成功',

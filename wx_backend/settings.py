@@ -123,3 +123,6 @@ STATIC_URL = 'static/'
 import os
 MEDIA_URL='/media/'
 MEDIA_ROOT=os.path.join(BASE_DIR,'media')
+
+# 允许所有主机访问，仅用于本地调试
+ALLOWED_HOSTS = ['*']
