@@ -1,7 +1,6 @@
 <!--index.wxml-->
 <view class='index_flex'>
   <image src="{{imageUrl || '/images/picture/home_img.jpg'}}" mode="widthFix"></image>
-  <button type="default" plain size="default" bind:tap="handleCamera">用相机拍照</button>
-  <button type="default" plain size="default" bind:tap="handleAlbum">从相册上传</button>
+  <button type="default" plain size="default" bind:tap="chooseMedia">上传并编辑照片</button>
   <button type="warn" plain size="default" bind:tap="handleDetect">开始检测</button>
 </view>

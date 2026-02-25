@@ -2,7 +2,6 @@
   "pages": [
     "pages/index/index",
     "pages/my/my",
-    "pages/crop/crop",
     "pages/result/result"
   ],
   "window": {

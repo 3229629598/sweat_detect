@@ -1,17 +1,5 @@
 {
-  "name": "smart_demo",
-  "version": "1.0.0",
-  "description": "",
-  "main": "app.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
-    "@vant/weapp": "^1.11.7",
-    "we-cropper": "^1.4.0"
+    "blueimp-md5": "^2.19.0"
   }
 }
