@@ -1,7 +1,7 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/my/my",
+    "pages/help/help",
     "pages/result/result"
   ],
   "window": {
@@ -12,12 +12,7 @@
     "backgroundTextStyle": "light",
     "navigationBarTextStyle": "black"
   },
-  "usingComponents": {
-    "van-cell": "@vant/weapp/cell/index",
-    "van-cell-group": "@vant/weapp/cell-group/index",
-    "van-calendar": "@vant/weapp/calendar/index",
-    "van-notice-bar": "@vant/weapp/notice-bar/index"
-  },
+  "usingComponents": {},
 
   "tabBar": {
     "selectedColor": "#1c1c1b",
@@ -25,13 +20,13 @@
     "list": [
       {
         "pagePath": "pages/index/index",
-        "text": "首页",
+        "text": "home",
         "iconPath": "images/icon/home.png",
         "selectedIconPath": "images/icon/home-o.png"
       },
       {
-        "pagePath": "pages/my/my",
-        "text": "我的",
+        "pagePath": "pages/help/help",
+        "text": "help",
         "iconPath": "images/icon/my.png",
         "selectedIconPath": "images/icon/my-o.png"
       }

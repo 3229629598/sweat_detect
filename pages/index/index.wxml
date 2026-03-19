@@ -1,6 +1,6 @@
 <!--index.wxml-->
 <view class='index_flex'>
   <image src="{{imageUrl || '/images/picture/home_img.jpg'}}" mode="widthFix"></image>
-  <button type="default" plain size="default" bind:tap="chooseMedia">上传并编辑照片</button>
-  <button type="warn" plain size="default" bind:tap="handleDetect">开始检测</button>
+  <button type="default" plain size="default" bind:tap="chooseMedia">Upload and edit photo</button>
+  <button type="warn" plain size="default" bind:tap="handleDetect">Start detection</button>
 </view>

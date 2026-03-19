@@ -73,7 +73,7 @@
 
 /* 下方大矩形 */
 .bottom-section {
-  width: 70vw;
+  width: 80vw;
   height: 400rpx;
   background-color:lightcyan;
   /* border: 2rpx solid black; */
@@ -86,7 +86,7 @@
 
 .data-section {
   flex: 1; /* 占满下方空间 */
-  width: 70vw;
+  width: 80vw;
   background-color:antiquewhite;
   /* border: 2rpx solid black; */
   border-radius: 30rpx;
@@ -105,7 +105,7 @@
 }
 
 .btn-group button {
-  width: 300rpx;
+  width: 400rpx;
   background: #07c160;
   color: white;
   border: none;

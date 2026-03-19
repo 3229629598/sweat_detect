@@ -1,0 +1,18 @@
+<!--pages/my/my.wxml-->
+<view class="topic">
+  Instructions
+</view>
+<view class="help">
+  <view>
+    1. Click the "Upload and Crop Image" button on the homepage, and choose to take a photo or upload an image from your camera.
+  </view>
+  <view>
+    2. Enter the cutting page, adjust the direction of the test strip so that the sweat sampling point is located at the bottom, and click "Confirm".
+  </view>
+  <view>
+    3. Return to the homepage and click the "Start Detection" button.
+  </view>
+  <view>
+    4. View the analysis results.
+  </view>
+</view>

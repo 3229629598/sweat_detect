@@ -11,7 +11,7 @@
     <!-- 左侧两个矩形 -->
     <view class="side-column left">
       <view class="rect">PH</view>
-      <view class="rect">葡萄糖</view>
+      <view class="rect">Glucose</view>
     </view>
     <!-- 中间正方形图片区 -->
     <view class="center-square">
@@ -19,7 +19,7 @@
     </view>
     <!-- 右侧两个矩形 -->
     <view class="side-column right">
-      <view class="rect">乳酸</view>
+      <view class="rect">Lactic acid</view>
       <view class="rect">
         <text>Cl</text>
         <text class="superscript">-</text>
@@ -40,12 +40,12 @@
       <text>mM</text>
     </view>
     <view>
-      <text>葡萄糖</text>
+      <text>Glucose</text>
       <text> : {{rx_data[2][3]}} </text>
       <text>mM</text>
     </view>
     <view>
-      <text>乳酸</text>
+      <text>Lactic acid</text>
       <text> : {{rx_data[3][3]}} </text>
       <text>mM</text>
     </view>
@@ -73,14 +73,14 @@
       <text style="color: blue;"> B {{rx_data[1][2]}}</text>
     </view>
     <view>
-    <text>葡萄糖</text>
+    <text>Glucose</text>
       <text> :</text>
       <text style="color: red;"> R {{rx_data[2][0]}}</text>
       <text style="color: green;"> G {{rx_data[2][1]}}</text>
       <text style="color: blue;"> B {{rx_data[2][2]}}</text>
     </view>
     <view>
-    <text>乳酸</text>
+    <text>Lactic acid</text>
       <text> :</text>
       <text style="color: red;"> R {{rx_data[3][0]}}</text>
       <text style="color: green;"> G {{rx_data[3][1]}}</text>
@@ -97,6 +97,6 @@
   </view>
   <!-- 底部按钮 -->
   <view class="btn-group">
-    <button bindtap="handleBtnClick">返回首页</button>
+    <button bindtap="handleBtnClick">Return to Home</button>
   </view>
 </view>
