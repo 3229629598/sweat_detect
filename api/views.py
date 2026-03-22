@@ -9,7 +9,7 @@ from rest_framework import status
 
 from api.serializers import GoodsSerializer
 from goods.models import Goods, Welcome
-from .vision import Vision
+from .detector import ColorBlockDetector
 
 @api_view(['GET', 'POST'])
 def goods_list(request):
@@ -88,20 +88,10 @@ def sweat_detect(request):
             for chunk in uploaded_file.chunks():
                 destination.write(chunk)
         
-        # 4. 定义颜色范围（和你vision.py里的一致）
-        color_ranges = [
-            {'name': 'purple', 'lower': np.array([100, 50, 50]), 'upper': np.array([150, 255, 255])},
-            {'name': 'dark_brown', 'lower': np.array([0, 50, 50]), 'upper': np.array([20, 255, 200])},
-            {'name': 'light_orange', 'lower': np.array([10, 50, 150]), 'upper': np.array([25, 255, 255])},
-            {'name': 'orange', 'lower': np.array([15, 50, 150]), 'upper': np.array([25, 255, 255])},
-            {'name': 'light_yellow', 'lower': np.array([20, 50, 150]), 'upper': np.array([35, 255, 255])},
-        ]
-        
-        # 5. 调用Vision类进行检测
-        detector = Vision(distance_threshold=15, min_contour_area=50)
-        position_blocks = detector.detect(
+        # 4. 调用ColorBlockDetector类进行检测
+        detector = ColorBlockDetector()
+        color_blocks = detector.process_image(
             image_path=temp_file_path,
-            color_ranges=color_ranges,
             show_result=False  # 后端运行时不显示图像窗口
         )
 
@@ -109,7 +99,7 @@ def sweat_detect(request):
             os.remove(temp_file_path)
             print(f"临时文件已删除：{temp_file_path}")
 
-        count = len(detector.color_blocks)
+        count = len(color_blocks)
         if count>5:
             print(f"检测到{count}个色块")
             return Response({
@@ -118,20 +108,19 @@ def sweat_detect(request):
             'data': None
         }, status=400)
         
-        # 6. 处理结果：将np.uint8转为Python原生类型，方便JSON序列化
+        # 5. 处理结果：将np.uint8转为Python原生类型，方便JSON序列化
         def serialize_block(block):
-            if block is None:
+            if block['color'] is None:
                 return None
             return {
-                'position_id': block['position_id'],
-                'position_name': block['position_name'],
-                'name': block['name'],
-                'bbox': block['bbox'],
-                'center': block['center'],
-                'rgb': tuple(int(c) for c in block['rgb'])  # 转换uint8为int
+                'position_id': block['position_id'],                
+                'center_x': block['center_x'],
+                'center_y': block['center_y'],
+                'area': block['area'],
+                'rgb': tuple(int(c) for c in block['mean_rgb'])  # 转换uint8为int
             }
         
-        serialized_result = [serialize_block(b) for b in position_blocks]
+        serialized_result = [serialize_block(b) for b in color_blocks]
 
         output_array = []
         for block in serialized_result:
@@ -143,7 +132,7 @@ def sweat_detect(request):
                 # 格式：[R, G, B, 0]
                 output_array.append([r, g, b, 0])
         
-        # 7. 返回JSON结果
+        # 6. 返回JSON结果
         return Response({
             'code': 200,
             'msg': '检测成功',
