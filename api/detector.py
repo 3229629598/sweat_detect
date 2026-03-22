@@ -262,7 +262,7 @@ if __name__ == "__main__":
     # 实例化检测器
     detector = ColorBlockDetector()
     
-    # 替换成你的图像路径
+    # 图像路径
     image_path = './media/welcome/home_img.jpg'
     
     # 处理图像
