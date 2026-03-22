@@ -6,8 +6,7 @@ class ColorBlockDetector:
         self.distance_threshold = distance_threshold
         self.min_contour_area = min_contour_area
         
-        # 使用您实际测量的HSV值，定义一个合理的范围
-        # 注意：H的范围是0-179, S和V的范围是0-255
+        # H的范围是0-179, S和V的范围是0-255
         self.color_ranges = {
             'purple': {'hsv_lower': np.array([100, 50, 50]), 'hsv_upper': np.array([150, 255, 255])},
             'orange': {'hsv_lower': np.array([15, 50, 150]), 'hsv_upper': np.array([35, 150, 255])},
@@ -39,7 +38,7 @@ class ColorBlockDetector:
         # 提取窗口区域
         roi = img_bgr[y1:y2, x1:x2]
         
-        # 计算BGR三个通道的均值 (注意OpenCV是BGR顺序)
+        # 计算BGR三个通道的均值
         mean_b = np.mean(roi[:, :, 0])
         mean_g = np.mean(roi[:, :, 1])
         mean_r = np.mean(roi[:, :, 2])
@@ -48,7 +47,6 @@ class ColorBlockDetector:
 
     def detect_color_blocks(self, img):
         """检测颜色块的核心函数"""
-        # --- 重要：直接使用原始图像，跳过可能引入问题的预处理 ---
         hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
         all_detected_blocks = []
@@ -65,7 +63,7 @@ class ColorBlockDetector:
             mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
 
             # 3. 查找轮廓
-            # 注意：cv2.RETR_EXTERNAL 只查找最外层轮廓，适合块状物体
+            # cv2.RETR_EXTERNAL 只查找最外层轮廓，适合块状物体
             contours, hierarchy = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
             
             print(f"  -> 找到 {len(contours)} 个轮廓")
