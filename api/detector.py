@@ -2,16 +2,24 @@ import cv2
 import numpy as np
 
 class ColorBlockDetector:
-    def __init__(self, distance_threshold=30, min_contour_area=100):
+    def __init__(self, distance_threshold=30):
         self.distance_threshold = distance_threshold
-        self.min_contour_area = min_contour_area
         
         # H的范围是0-179, S和V的范围是0-255
         self.color_ranges = {
-            'purple': {'hsv_lower': np.array([100, 50, 50]), 'hsv_upper': np.array([150, 255, 255])},
-            'orange': {'hsv_lower': np.array([15, 50, 150]), 'hsv_upper': np.array([35, 150, 255])},
-            'brown': {'hsv_lower': np.array([0, 50, 50]), 'hsv_upper': np.array([20, 255, 200])},
-            'yellow': {'hsv_lower': np.array([10, 50, 150]), 'hsv_upper': np.array([30, 200, 255])},
+            # 紫红色/粉色 (对应顶部块)
+            'purple_pink': {'hsv_lower': np.array([100, 60, 100]), 'hsv_upper': np.array([160, 255, 255])},
+            
+            # 棕色/暗橙色 (对应左上块)
+            'brown':       {'hsv_lower': np.array([0, 50, 60]),  'hsv_upper': np.array([70, 255, 200])},
+            
+            # 米黄色/淡米黄 (对应左下、右上块)
+            # 这通常是低饱和度、高亮度的橙/黄色
+            'beige':       {'hsv_lower': np.array([10, 10, 180]), 'hsv_upper': np.array([85, 50, 255])},
+            
+            # 白色 (对应右下块)
+            # 需要极低的饱和度，极高的亮度
+            'white':       {'hsv_lower': np.array([0, 0, 210]),   'hsv_upper': np.array([180, 30, 230])},
         }
         self.color_blocks = []
         # 添加一个实例变量来存储原始图像，供鼠标回调函数使用
@@ -47,9 +55,16 @@ class ColorBlockDetector:
 
     def detect_color_blocks(self, img):
         """检测颜色块的核心函数"""
-        hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+        # 高斯模糊，再转HSV
+        blurred = cv2.GaussianBlur(img, (5, 5), 0)
+        hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)
 
         all_detected_blocks = []
+
+         # 计算过滤噪点的阈值
+        h, w = img.shape[:2]
+        min_contour_area = h * w * 0.005
+        print(f"  -> 阈值面积 {min_contour_area} ")
         
         for color_name, range_data in self.color_ranges.items():
             print(f"正在检测颜色: {color_name}")
@@ -57,22 +72,25 @@ class ColorBlockDetector:
             # 1. 创建掩码
             mask = cv2.inRange(hsv, range_data['hsv_lower'], range_data['hsv_upper'])
             
-            # 2. 形态学操作，清理掩码
-            kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
-            mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
-            mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
+            # 2. 形态学操作
+            kernel_close = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (7, 7))
+            kernel_open = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
+            # 闭操作：先膨胀后腐蚀，用于填充块内的空洞和连接靠近的块
+            mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel_close)
+            # 开操作：先腐蚀后膨胀，用于去除小的孤立噪点
+            mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel_open)
 
             # 3. 查找轮廓
             # cv2.RETR_EXTERNAL 只查找最外层轮廓，适合块状物体
             contours, hierarchy = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
             
             print(f"  -> 找到 {len(contours)} 个轮廓")
-
+           
             for contour in contours:
                 area = cv2.contourArea(contour)
                 # print(f"  -> 当前轮廓面积: {area}")
 
-                if area > self.min_contour_area:
+                if area > min_contour_area:
                     # 计算轮廓的质心
                     M = cv2.moments(contour)
                     if M["m00"] != 0: # 防止除零错误
@@ -89,8 +107,6 @@ class ColorBlockDetector:
                             'contour': contour,
                             'mean_rgb': (mean_r, mean_g, mean_b) # 将RGB均值存入字典
                         })
-                        
-                        # print(f"      -> 检测到有效块: 颜色={color_name}, 中心=({cx},{cy}), 面积={area}, 平均RGB=({mean_r:.2f}, {mean_g:.2f}, {mean_b:.2f})")
         
         # 去重逻辑
         unique_blocks = []
@@ -116,45 +132,15 @@ class ColorBlockDetector:
         distance = np.sqrt((point1[0] - point2[0])**2 + (point1[1] - point2[1])**2)
         return distance < self.distance_threshold
 
-    def match_blocks_to_positions(self, img_height, img_width):
+    def match_blocks_to_positions(self):
+        positions = [None, None, None, None, None]
+        
         if not self.color_blocks:
-            return [None, None, None, None, None]
+            return positions
 
-        # 1. 寻找位置1 (顶部中央)
         sorted_by_y = sorted(self.color_blocks, key=lambda x: x['center'][1])
-        top_region_blocks = [b for b in sorted_by_y if b['center'][1] < img_height * 0.3]
-        
-        if top_region_blocks:
-            img_center_x = img_width / 2
-            position_1_block = min(top_region_blocks, key=lambda x: abs(x['center'][0] - img_center_x))
-        else:
-            position_1_block = sorted_by_y[0]
-
-        # 2. 确定分界线
-        center_x = position_1_block['center'][0]
-        upper_lower_boundary = img_height * 2 / 5
-
-        # 3. 分配剩余位置
-        remaining_blocks = [block for block in self.color_blocks if block != position_1_block]
-        
-        positions = [position_1_block, None, None, None, None]
-
-        for block in remaining_blocks:
-            cx, cy = block['center']
-            if cx < center_x: # 左侧
-                if cy < upper_lower_boundary: # 上半 -> 位置2
-                    if positions[1] is None or cy < positions[1]['center'][1]:
-                        positions[1] = block
-                else: # 下半 -> 位置3
-                    if positions[2] is None or cy > positions[2]['center'][1]:
-                        positions[2] = block
-            else: # 右侧
-                if cy < upper_lower_boundary: # 上半 -> 位置4
-                    if positions[3] is None or cy < positions[3]['center'][1]:
-                        positions[3] = block
-                else: # 下半 -> 位置5
-                    if positions[4] is None or cy > positions[4]['center'][1]:
-                        positions[4] = block
+        for i, block in enumerate(sorted_by_y[:len(self.color_blocks)]):
+            positions[i] = block
 
         return positions
     
@@ -199,7 +185,7 @@ class ColorBlockDetector:
             print("  - 未检测到任何色块")
 
         # 分配位置
-        results = self.match_blocks_to_positions(img.shape[0], img.shape[1])
+        results = self.match_blocks_to_positions()
 
         # 打印最终结果
         print("\n--- 按位置排序的结果 ---")
@@ -221,7 +207,7 @@ class ColorBlockDetector:
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
                     
             # 创建窗口并设置鼠标回调
-            cv2.namedWindow('Color Block Detection Result')
+            cv2.namedWindow('Color Block Detection Result',cv2.WINDOW_NORMAL)
             cv2.setMouseCallback('Color Block Detection Result', self.mouse_callback)
             
             print("\n--- 提示 ---")
@@ -229,6 +215,7 @@ class ColorBlockDetector:
             print("关闭窗口以结束程序。")
             print("----------")
 
+            cv2.resizeWindow("Color Block Detection Result", 600, 600)
             cv2.imshow('Color Block Detection Result', img)
             cv2.waitKey(0)
             cv2.destroyAllWindows()
@@ -263,7 +250,7 @@ if __name__ == "__main__":
     detector = ColorBlockDetector()
     
     # 图像路径
-    image_path = './media/welcome/home_img.jpg'
+    image_path = './media/welcome/img3.jpg'
     
     # 处理图像
     results = detector.process_image(image_path)
