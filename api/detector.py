@@ -25,36 +25,7 @@ class ColorBlockDetector:
         }
         self.color_blocks = []
         # 添加一个实例变量来存储原始图像，供鼠标回调函数使用
-        self.original_image = None
-
-    def calculate_local_mean_rgb(self, img_bgr, center_x, center_y, window_size=10):
-        """
-        计算指定中心点周围区域的R, G, B均值
-        
-        :param img_bgr: 输入的BGR图像
-        :param center_x: 中心点X坐标
-        :param center_y: 中心点Y坐标
-        :param window_size: 计算均值的窗口半径 (例如，window_size=10 表示 21x21 的窗口)
-        :return: (mean_r, mean_g, mean_b) 元组
-        """
-        h = self.h
-        w = self.w
-        
-        # 计算窗口边界，确保不超出图像范围
-        x1 = max(center_x - window_size, 0)
-        x2 = min(center_x + window_size + 1, w)
-        y1 = max(center_y - window_size, 0)
-        y2 = min(center_y + window_size + 1, h)
-        
-        # 提取窗口区域
-        roi = img_bgr[y1:y2, x1:x2]
-        
-        # 计算BGR三个通道的均值
-        mean_b = np.mean(roi[:, :, 0])
-        mean_g = np.mean(roi[:, :, 1])
-        mean_r = np.mean(roi[:, :, 2])
-        
-        return float(mean_r), float(mean_g), float(mean_b)
+        self.original_image = None    
 
     def detect_color_blocks(self, img):
         """检测颜色块的核心函数"""
@@ -177,6 +148,35 @@ class ColorBlockDetector:
             positions[i] = block
 
         return positions
+    
+    def calculate_local_mean_rgb(self, img_bgr, center_x, center_y, window_size=10):
+        """
+        计算指定中心点周围区域的R, G, B均值
+        
+        :param img_bgr: 输入的BGR图像
+        :param center_x: 中心点X坐标
+        :param center_y: 中心点Y坐标
+        :param window_size: 计算均值的窗口半径 (例如，window_size=10 表示 21x21 的窗口)
+        :return: (mean_r, mean_g, mean_b) 元组
+        """
+        h = self.h
+        w = self.w
+        
+        # 计算窗口边界，确保不超出图像范围
+        x1 = max(center_x - window_size, 0)
+        x2 = min(center_x + window_size + 1, w)
+        y1 = max(center_y - window_size, 0)
+        y2 = min(center_y + window_size + 1, h)
+        
+        # 提取窗口区域
+        roi = img_bgr[y1:y2, x1:x2]
+        
+        # 计算BGR三个通道的均值
+        mean_b = np.mean(roi[:, :, 0])
+        mean_g = np.mean(roi[:, :, 1])
+        mean_r = np.mean(roi[:, :, 2])
+        
+        return float(mean_r), float(mean_g), float(mean_b)
     
     def mouse_callback(self, event, x, y, flags, param):
         """
