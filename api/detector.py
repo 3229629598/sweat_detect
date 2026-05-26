@@ -4,22 +4,24 @@ import numpy as np
 class ColorBlockDetector:
     def __init__(self, distance_threshold=30):
         self.distance_threshold = distance_threshold
+        self.h = 0
+        self.w = 0
         
         # H的范围是0-179, S和V的范围是0-255
         self.color_ranges = {
             # 紫红色/粉色 (对应顶部块)
-            'purple_pink': {'hsv_lower': np.array([100, 60, 100]), 'hsv_upper': np.array([160, 255, 255])},
+            'purple_pink': {'hsv_lower': np.array([100, 50, 100]), 'hsv_upper': np.array([160, 255, 255])},
             
             # 棕色/暗橙色 (对应左上块)
             'brown':       {'hsv_lower': np.array([0, 50, 60]),  'hsv_upper': np.array([70, 255, 200])},
             
             # 米黄色/淡米黄 (对应左下、右上块)
             # 这通常是低饱和度、高亮度的橙/黄色
-            'beige':       {'hsv_lower': np.array([10, 10, 180]), 'hsv_upper': np.array([85, 50, 255])},
+            'beige':       {'hsv_lower': np.array([30, 20, 130]), 'hsv_upper': np.array([80, 50, 255])},
             
             # 白色 (对应右下块)
             # 需要极低的饱和度，极高的亮度
-            'white':       {'hsv_lower': np.array([0, 0, 210]),   'hsv_upper': np.array([180, 30, 230])},
+            'white':       {'hsv_lower': np.array([0, 0, 200]),   'hsv_upper': np.array([85, 30, 230])},
         }
         self.color_blocks = []
         # 添加一个实例变量来存储原始图像，供鼠标回调函数使用
@@ -35,7 +37,8 @@ class ColorBlockDetector:
         :param window_size: 计算均值的窗口半径 (例如，window_size=10 表示 21x21 的窗口)
         :return: (mean_r, mean_g, mean_b) 元组
         """
-        h, w = img_bgr.shape[:2]
+        h = self.h
+        w = self.w
         
         # 计算窗口边界，确保不超出图像范围
         x1 = max(center_x - window_size, 0)
@@ -62,8 +65,8 @@ class ColorBlockDetector:
         all_detected_blocks = []
 
          # 计算过滤噪点的阈值
-        h, w = img.shape[:2]
-        min_contour_area = h * w * 0.005
+        self.h, self.w = img.shape[:2]
+        min_contour_area = self.h * self.w * 0.005
         print(f"  -> 阈值面积 {min_contour_area} ")
         
         for color_name, range_data in self.color_ranges.items():
@@ -134,12 +137,43 @@ class ColorBlockDetector:
 
     def match_blocks_to_positions(self):
         positions = [None, None, None, None, None]
+        # 中心点距离过滤阈值
+        dist_threshold = self.w * 0.05
         
         if not self.color_blocks:
             return positions
 
+        # 按y轴大小排列色块
         sorted_by_y = sorted(self.color_blocks, key=lambda x: x['center'][1])
-        for i, block in enumerate(sorted_by_y[:len(self.color_blocks)]):
+
+        to_remove = set()
+        n = len(sorted_by_y)
+        
+        for i in range(n):
+            for j in range(i + 1, n):
+                if i in to_remove or j in to_remove:
+                    continue
+
+                x1, y1 = sorted_by_y[i]['center']
+                x2, y2 = sorted_by_y[j]['center']
+
+                center_dist = np.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
+
+                if center_dist < dist_threshold:
+                    if sorted_by_y[i]['area'] < sorted_by_y[j]['area']:
+                        to_remove.add(i)
+                        print(f"-> 发现邻近色块！中心距离 {center_dist:.1f} < {dist_threshold:.1f}。剔除面积较小的色块 [位置Y较浅的块]")
+                    else:
+                        to_remove.add(j)
+                        print(f"-> 发现邻近色块！中心距离 {center_dist:.1f} < {dist_threshold:.1f}。剔除面积较小的色块 [位置Y较深的块]")
+
+        filtered_blocks = [block for idx, block in enumerate(sorted_by_y) if idx not in to_remove]
+
+        cnt = len(filtered_blocks)
+        if cnt > 5:
+            cnt = 5
+            
+        for i, block in enumerate(filtered_blocks[:cnt]):
             positions[i] = block
 
         return positions
@@ -250,7 +284,7 @@ if __name__ == "__main__":
     detector = ColorBlockDetector()
     
     # 图像路径
-    image_path = './media/welcome/img3.jpg'
+    image_path = './media/welcome/tu10.jpg'
     
     # 处理图像
     results = detector.process_image(image_path)
