@@ -129,8 +129,38 @@ def sweat_detect(request):
                 output_array.append([None, None, None, None])
             else:
                 r, g, b = block['rgb']
-                # 格式：[R, G, B, 0]
-                output_array.append([r, g, b, 0])
+                match block['position_id']:
+                    case 1: #mg
+                        g =g+30
+                        b =b+30
+                        y1 = (g - 160.89) / (-7.78)
+                        y2 = (b - 226.17) / (-6.184)
+                        c = (y1 + y2) / 2
+                    case 2: #ph
+                        c = 5.524
+                    case 3: #urea
+                        r =r-10
+                        g =g-10
+                        b =b-20
+                        y1 = (r - 189.53) / (-0.782)
+                        y2 = (g - 194.93) / (-0.548)
+                        y3 = (b - 170.33) / (-2.149)
+                        c = (y1 + y2 + y3) / 3
+                    case 4: #glucose
+                        g = g-20
+                        b = b-10
+                        y1 = (g - 169.917) / (-6.632)
+                        y2 = (b - 165.156) / (-18.347)
+                        c = (y1 + y2) / 2
+                    case 5: #cl
+                        g = g-60
+                        b = b-50
+                        y1 = (g - 166.507) / (-0.376)
+                        y2 = (b - 164.6) / (-0.582)
+                        c = (y1 + y2) / 2
+                c = round(c, 3)
+                # 格式：[R, G, B, C]
+                output_array.append([r, g, b, c])
         
         # 6. 返回JSON结果
         return Response({

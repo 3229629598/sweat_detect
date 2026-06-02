@@ -249,7 +249,7 @@ class ColorBlockDetector:
             print("关闭窗口以结束程序。")
             print("----------")
 
-            cv2.resizeWindow("Color Block Detection Result", 600, 600)
+            cv2.resizeWindow("Color Block Detection Result", 500, 600)
             cv2.imshow('Color Block Detection Result', img)
             cv2.waitKey(0)
             cv2.destroyAllWindows()
@@ -284,7 +284,7 @@ if __name__ == "__main__":
     detector = ColorBlockDetector()
     
     # 图像路径
-    image_path = './media/welcome/tu10.jpg'
+    image_path = './media/welcome/tu5.jpg'
     
     # 处理图像
     results = detector.process_image(image_path)
