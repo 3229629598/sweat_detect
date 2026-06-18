@@ -1,9 +1,8 @@
 // index.js
-import md5 from '../../miniprogram_npm/blueimp-md5/index.js'
 
 Page({
   data: {
-    imageUrl: '/images/picture/home_img.jpg', // 选中的图片临时路径
+    imageUrl: '/images/picture/home.png', // 选中的图片临时路径
     imageMd5: 0,
   },
   onDisplay() {
@@ -32,7 +31,7 @@ Page({
       filePath: filePath,
       success: (fileRes) => {
         const uint8Array = new Uint8Array(fileRes.data);
-        const imageMd5 = md5(uint8Array);
+        const imageMd5 = 0;
         console.log('小程序端计算的MD5:', imageMd5);
         this.setData({
           imageMd5: imageMd5,
@@ -40,7 +39,7 @@ Page({
       },
       fail: (err) => {
         console.error('读取图片失败:', err);
-        wx.showToast({title: '读取图片失败', icon: 'none'});
+        //wx.showToast({title: '读取图片失败', icon: 'none'});
       }
     });
   },
@@ -53,7 +52,7 @@ Page({
     this.calculateFileHash(this.data.imageUrl);
     // 上传到服务器
     wx.uploadFile({
-      url: 'http://192.168.1.6:8000/detect/', // 的后端接口
+      url: 'http://192.168.1.4:8000/detect/', // 的后端接口
       method:'POST',
       filePath: this.data.imageUrl,
       name: 'file', // 后端接收文件的字段名

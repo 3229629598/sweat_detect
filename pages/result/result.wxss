@@ -18,10 +18,12 @@
 /* 顶部窄条 */
 .top-bar {
   height: 50rpx;
+  margin-top: 20rpx;
   background-color: white;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-weight: bold;
   font-size: 40rpx;
   color: black;
 }
@@ -52,6 +54,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  font-weight: bold;
   font-size: 40rpx;
   color: black;
 }
@@ -85,7 +88,8 @@
 }
 
 .data-section {
-  flex: 1; /* 占满下方空间 */
+  /* flex: 1;  *//* 占满下方空间 */
+  height: 300rpx;
   width: 80vw;
   background-color:antiquewhite;
   /* border: 2rpx solid black; */
@@ -94,6 +98,46 @@
   font-size: 40rpx;
   padding-left: 50rpx;
   line-height:160%;
+}
+
+.grid-wrap {
+  width: 100%;
+  border: 1rpx solid #fff;
+  margin-top: 15rpx;
+}
+.grid-row {
+  display: flex;
+  width: 100%;
+}
+
+.gird-tap-font {
+  font-weight: bold;
+  font-size: 35rpx;
+  color: black;
+}
+
+.grid-cell {
+  flex: 1;
+  height: 120rpx; /* 单元格高度按需修改 */
+  border: 1rpx solid #ffffff; /* 白色分割线 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 50rpx;
+  color: black;
+}
+
+.line1 {
+  background-color:#deebf7;
+}
+
+.line2 {
+  background-color:#fbe5d6;
+}
+
+.line3 {
+  background-color:#ededed ;
 }
 
 /* 按钮组（底部居中） */

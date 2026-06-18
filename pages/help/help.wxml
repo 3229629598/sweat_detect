@@ -1,18 +1,15 @@
 <!--pages/my/my.wxml-->
 <view class="topic">
-  Instructions
+  Advice
 </view>
 <view class="help">
   <view>
-    1. Click the "Upload and Crop Image" button on the homepage, and choose to take a photo or upload an image from your camera.
+    1. Add magnesium-rich foods (spinach, nuts, beans) to daily meals; take light salt and diluted electrolyte drinks only for workouts over 1 hour, stick to whole carbs and drink enough plain water daily.
   </view>
   <view>
-    2. Enter the cutting page, adjust the direction of the test strip so that the sweat sampling point is located at the bottom, and click "Confirm".
+    2. Keep single training under 60 minutes, avoid exercising in extreme heat; eat magnesium supplements within 30 mins post-workout and add 2–3 weekly strength sessions to reduce mineral loss.
   </view>
   <view>
-    3. Return to the homepage and click the "Start Detection" button.
-  </view>
-  <view>
-    4. View the analysis results.
+    3. Sleep 7–9 hours daily, limit heavy caffeine; shower right after sweating to soothe acidic sweat irritation, and retest sweat indicators every 1–2 weeks to adjust your routine.
   </view>
 </view>

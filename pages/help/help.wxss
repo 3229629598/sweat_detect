@@ -1,7 +1,7 @@
 /* pages/my/my.wxss */
 .topic {
   width: 100%;
-  margin: 20rpx;
+  margin-top: 20rpx;
   font-size: 60rpx;
   display: flex;
   flex-direction: column;

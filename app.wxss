@@ -1,1 +1,5 @@
 /**app.wxss**/
+page {
+  /* 优先Arial，没有则自动降级系统默认无衬线字体 */
+  font-family: Arial, Helvetica, sans-serif;
+}
