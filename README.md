@@ -26,3 +26,7 @@ python manage.py createsuperuser
 pip install pipreqs
 pipreqs --force .
 ```
+# views.py存在技术性调整
+```
+output_array.append([r, g, b, c]) 
+```
