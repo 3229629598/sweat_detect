@@ -16,7 +16,7 @@
     4. Upload and edit the photo to clearly display all five sensing zones.
   </view>
   <view>
-    5. Tap "Start detection" to extract the RGB values and view the pH and concentrations of urea, glucose, chloride, and magnesium.
+    5. Tap the "Start detection" button to extract the RGB values and view the pH and concentrations of urea, glucose, chloride, and magnesium.
   </view>
 </view>
 
