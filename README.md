@@ -23,8 +23,7 @@ python manage.py createsuperuser
 ```
 # 导出第三方模块到requirements.txt
 ```
-pip install pipreqs
-pipreqs --force .
+pip3 freeze > requirements.txt
 ```
 # views.py存在技术性调整
 ```
