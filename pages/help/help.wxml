@@ -1,5 +1,26 @@
 <!--pages/my/my.wxml-->
 <view class="topic">
+  Instructions
+</view>
+<view class="help">
+  <view>
+    1. Attach the microfluidic patch to the skin.
+  </view>
+  <view>
+    2. Allow sweat to fully wet the sensing zones, then wait an additional 1 minute.
+  </view>
+  <view>
+    3. Take a photo of the patch or select an existing image from your gallery.
+  </view>
+  <view>
+    4. Upload and edit the photo to clearly display all five sensing zones.
+  </view>
+  <view>
+    5. Tap "Start detection" to extract the RGB values and view the pH and concentrations of urea, glucose, chloride, and magnesium.
+  </view>
+</view>
+
+<!-- <view class="topic">
   Advice
 </view>
 <view class="help">
@@ -12,4 +33,4 @@
   <view>
     3. Sleep 7–9 hours daily, limit heavy caffeine; shower right after sweating to soothe acidic sweat irritation, and retest sweat indicators every 1–2 weeks to adjust your routine.
   </view>
-</view>
+</view> -->

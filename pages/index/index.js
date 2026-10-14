@@ -52,7 +52,7 @@ Page({
     this.calculateFileHash(this.data.imageUrl);
     // 上传到服务器
     wx.uploadFile({
-      url: 'http://192.168.1.4:8000/detect/', // 的后端接口
+      url: 'http://10.242.15.45:8000/detect/', // 的后端接口
       method:'POST',
       filePath: this.data.imageUrl,
       name: 'file', // 后端接收文件的字段名
